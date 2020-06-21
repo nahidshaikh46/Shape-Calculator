@@ -1,0 +1,251 @@
+<!--
+@Author: Nahid Shaikh
+Language: HTML
+Version: 1.0
+-->
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <title>Shape Calculator</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="style/style.css" />
+        <link rel="icon" href="style/favicon.png" alt="Favicon" type="image/x-icon"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="logo">
+                <img src="style/logo.png" style="width: 60%;"/>
+            </div>
+
+            <div class="brk"></div>
+
+            <!-- Step 1 start-->
+            <div class="row" id="step1">
+                <div class="col-sm-5">
+                    <div class="header2">Welcome to Shape Calculator</div>
+                    <p>Shape Calculator is an interactive web application. To the right you will find the 3 step application. Follow the instructions in each step. Clicking cancle will take you back to step 1. Enjoy!</p>
+                </div>
+                <div class="col-sm-4 shape">
+                    <div class="radio-div">
+                        <div class="header">Step 1 - Select Your Shape</div><br>
+
+                        <div class="radio-data">
+                          </div>
+                        <div class="btns">
+                            <button class="btn-blue" onclick="NextClick()">Next</button>
+                            <button class="btn-white">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--end Step 1 -->
+
+            <!-- Step 2 start-->
+            <div class="row" id="step2" style="display: none;">
+                <div class="col-sm-5">
+                    <div class="header2">Welcome to Shape Calculator</div>
+                    <p>Shape Calculator is an interactive web application. To the right you will find the 3 step application. Follow the instructions in each step. Clicking cancle will take you back to step 1. Enjoy!</p>
+                </div>
+                <div class="col-sm-4 shape">
+                    <div class="radio-div">
+                        <div class="header">Step 2 - Insert your values</div>
+
+                        <p>You have selected a <span class="selected"></span>, please input the required variables</p>
+
+                        <div class="textboxes"></div>
+
+                        <div class="btns2">
+                            <button class="btn-blue" onclick="SubmitValue()">Next</button>
+                            <button class="btn-white" onclick="CancleClick()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="banner">
+                        <div class="bannerdata">
+                            120 X 370 <br />
+                            (Vertical Banner)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- end Step 2 -->
+
+            <!--  Step 3 start-->
+            <div class="row" id="step3" style="display: none;">
+                <div class="col-sm-5">
+                    <div class="header2">Welcome to Shape Calculator</div>
+                    <p>Shape Calculator is an interactive web application. To the right you will find the 3 step application. Follow the instructions in each step. Clicking cancle will take you back to step 1. Enjoy!</p>
+                </div>
+                <div class="col-sm-4 shape">
+                    <div class="radio-div">
+                        <div class="header">Step 3 - Your results</div>
+
+                        <p>You have calculated the area of  <span class="selected"></span> to be <span class="output"> </span>. Below is your result:</p>
+
+                        <div class="result">The area is <span class="output"> </span></div>
+
+                        <div class="btns3">
+                            <button class="btn-blue" onclick="StartOver()">Start over</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="banner">
+                        <div class="bannerdata">
+                            120 X 370 <br />
+                            (Vertical Banner)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- end Step 3 -->
+
+            <br />
+            <br />
+        </div>
+        <div class="modal fade" id="error">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="alert alert-block alert-danger">
+                            <h4>Error !</h4>
+                            Plese Select Shape
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </body>
+      <script>
+        var metadata = '';
+        $(document).ready(function() {
+         // for add new types of shapes just add data in shape metadata and create new formula for cal shape.
+               metadata = {
+                    shape :[
+                      {label: 'Rectangle', function: 'CalcRectangle()', var: ["Height","Width"]},
+                      {label: 'Circle', function: 'CalcCircle()' , var: ["Daimeter"]},
+                      {label: 'Square', function: 'CalcSuare()', var: ["Width"]},
+                      {label: 'Eclipse', function: 'CalcEclipse()', var: ["Height","Width"]}
+                    ]  
+              }
+              metadata.shape.forEach(function (c) {
+                var data = c;
+                var html ='';
+                 html +=  ' <label class="radiobtn">'+
+                          ' '+c.label+' ' +
+                          '  <input type="radio" value="'+c.label+'"  name="shape" />'+
+                          '  <span class="checkmark"></span>'+
+                          '</label>' ;
+
+                        $(".radio-data").append(html);
+              });
+         });      
+
+         function NextClick() {
+            if ($("input[name='shape']:checked").val()) {
+                metadata.shape.forEach(function (c) {
+                  var html = '';
+                  if ($("input[name='shape']:checked").val() == c.label) {
+                      c.var.forEach(function (x) {
+                         html += ' <div class="lbl" >'+x+' : </div><input type="text"  id="'+x+'" placeholder="text..." class="textbox" >';
+                        
+                      });
+                    $(".textboxes").html(html);
+                    $("#step1").hide();
+                    $("#step2").show();
+                  }
+                });
+              } else {
+                $("#error").modal("show");
+              }
+        }
+        
+        function SubmitValue() {
+          metadata.shape.forEach(function (c) {
+            if ($("input[name='shape']:checked").val() == c.label) {
+              var area = eval(c.function);
+              area = +area.toFixed(2);
+              $(".output").text(area);
+            }
+          });
+          $("#step2").hide();
+          $("#step3").show();
+        }
+
+        function StartOver() {
+            $('input[name="shape"]').prop("checked", false);
+
+            $("#step3").hide();
+            $("#step1").show();
+        }
+
+        function CancleClick() {
+            $("#step2").hide();
+            $("#step1").show();
+        }
+
+        function CalcRectangle() {
+          var h = $("#Height").val();
+          var w = $("#Width").val();
+          if (!h) {
+              alert("Please enter Height");
+              return false;
+          }
+          if (!w) {
+              alert("Please enter Width");
+              return false;
+          }
+          var area = h * w;
+          return area;
+        }
+
+        function CalcCircle() {
+          var d = $("#Daimeter").val();
+          if (!d) {
+              alert("Please enter Daimeter");
+              return false;
+          }
+          var area = (Math.PI / 4) * (d * d);
+          return area;
+        }
+
+        function CalcSuare() {
+          var w = $("#Width").val();
+          if (!w) {
+              alert("Please enter Width");
+              return false;
+          }
+          var area = w * w;
+          return area;
+        }
+
+        function CalcEclipse() {
+          var h = $("#Height").val();
+          var w = $("#Width").val();
+          if (!h) {
+              alert("Please enter Height");
+              return false;
+          }
+          if (!w) {
+              alert("Please enter Width");
+              return false;
+          }
+          var area = Math.PI * h * w;
+          return area;
+        }
+
+      </script>
+</html>
